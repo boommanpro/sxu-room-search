@@ -19,17 +19,20 @@ public class DateUtil {
     @Setter
     private static String startTime;
 
-
-    private static SimpleDateFormat format =new  SimpleDateFormat("yyyy-MM-dd");//设置日期格式;
+    /**
+     * 设置日期格式
+     */
+    private static SimpleDateFormat format =new  SimpleDateFormat("yyyy-MM-dd");
 
 
 
     public static String getNowTime() {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+        //设置日期格式
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         return df.format(new Date());
     }
 
-    public String AfterTime(String Time, int day) {
+    public String afterTime(String Time, int day) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
@@ -47,14 +50,14 @@ public class DateUtil {
 
 
 
-    public static String weekNumberToDateStr(int Week_Number, int Week) {
+    public static String weekNumberToDateStr(int weekNumber, int week) {
 
         /*
          *
          * 将周次换成时间
          *
          */
-        int sum = (Week_Number - 1) * 7 + Week - 1;
+        int sum = (weekNumber - 1) * 7 + week - 1;
 
         Calendar newCalendar = new GregorianCalendar();
 
@@ -82,24 +85,6 @@ public class DateUtil {
 
     }
 
-    public String Get_XNXQ_XQ() {
-        // TODO: 2018/1/24 获取学年学期时间
-
-//        String Url=SchoolConfigProperties.Host.getURL()+SchoolConfigProperties.XNXQ_XQ.getURL();
-//
-//        String XNXQ_XQ_Data= Data.queryData(Url);
-//
-//        KingoSoftParse parse=new KingoSoftParse(XNXQ_XQ_Data);
-//
-//        JSONObject pojo=parse.getXxxq();
-//
-//        JSONArray XNXQ=pojo.getJSONArray("学年学期");
-//
-//        String NowXNXQ=XNXQ.getString(0);
-
-        return "";
-//        return NowXNXQ;
-    }
 
     public String DatetoString(Date date) {
 
@@ -114,24 +99,24 @@ public class DateUtil {
          * 用正则表达式取出第五位数字
          */
 
-        String Half = null;
+        String half = null;
 
 
-        String Regex = "\\d{4}(?<Half>\\d)";
+        String regex = "\\d{4}(?<Half>\\d)";
 
-        Pattern pattern = Pattern.compile(Regex);
+        Pattern pattern = Pattern.compile(regex);
 
         Matcher matcher = pattern.matcher(dateStr);
 
         matcher.find();
 
-        Half = matcher.group("Half");
+        half = matcher.group("Half");
 
-        return Half;
+        return half;
 
     }
 
-    public List<Integer> DateToWeekList(String EndTime) {
+    public List<Integer> DateToWeekList(String endTime) {
         /*
          *以前用到的工具
          *计算两个Date时间差
@@ -143,7 +128,7 @@ public class DateUtil {
         // TODO: 2018/1/24 获取时间
 //        String startTime = ClassStart.secondhalf.getStart() + " 0:0:0";
 
-        String dateStr2 = EndTime + " 0:0:0";
+        String dateStr2 = endTime + " 0:0:0";
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Date date2 = null, date = null;
