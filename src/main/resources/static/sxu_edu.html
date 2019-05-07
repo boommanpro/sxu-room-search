@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>山西大学</title>
+    <link rel="stylesheet" type="text/css" href="/resource/css/amazeui.min.css"/>
+    <link type="text/css" rel="stylesheet" href="/resource/jedate/skin/jedate.css">
+    <link rel="stylesheet" href="/resource/css/idangerous.swiper.css">
+    <link rel="stylesheet" href="/resource/css/BoomMan.css">
+    <link rel="stylesheet" type="text/css" href="/resource/css/sweet-alert.css">
+    <script type="text/javascript" src="/resource/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/resource/jedate/jquery.jedate.min.js"></script>
+    <script src="/resource/js/sweet-alert.min.js"></script>
+    <script type="text/javascript" src="/resource/js/idangerous.swiper.min.js"></script>
+    <script src="/resource/js/BoomMan.js"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/resource/css/ionicons.min.css">
+</head>
+
+<body>
+<div class="am-panel">
+    <div class="am-panel-bd">
+        <h2 style="color:#13AFFF; text-align:center">
+
+            请选择要查询的日期及教学楼 </h2>
+        <div class="am-form-group">
+            <input type="text" class=" am-form-field " placeholder="YYYY-MM-DD" id="my-start-2" readonly>
+        </div>
+        <div class="am-form-group">
+            <input name="jsmc" type="text" class="am-form-field" id="BuildingValue" placeholder="教学楼Value"
+                   disabled="true" value=""/>
+            <input name="jxl" type="hidden" value=""/>
+            <input name="jxq" type="hidden" value=""/>
+            <input name="lc" type="hidden" value=""/>
+        </div>
+        <div class="am-form-group xq">
+            校区：
+
+            <span class="am-btn am-btn-primary am-btn-xs  btn-margin"
+                  data-value="1">坞城校区</span><span class="am-btn am-btn-primary am-btn-xs  btn-margin"
+                  data-value="2">大东关校区</span><span class="am-btn am-btn-primary am-btn-xs  btn-margin"
+                  data-value="3">山西体育职业学院</span>
+        </div>
+        <div class="am-form-group  am-hide jxl" data-value="1">
+            教学楼：
+            <span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="101">理科楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="102">主楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="103">文瀛楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="104">政管楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="105">文科楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="106">教科楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="107">外语旧楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="108">研究生院楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="109">商学楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="110">物电楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="111">计数楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="112">哲学楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="113">化学楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="114">生科楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="115">环资楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="116">美术楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="117">音乐楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="118">外语新楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="119">文体馆</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="121">图书馆</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="122">保卫部</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="123">办公1楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="124">专家楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="125">档案馆</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="126">校医院</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="127">后勤处</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="128">体育实验楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="129">大型科学仪器中心</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="130">鸿猷体育场</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="132">工会</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="133">南操</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="134">南操网球场</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="135">北操网球场</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="136">排球场</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="137">游泳馆</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="138">体育馆</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="139">科技楼</span>
+
+        </div>
+        <div class="am-form-group  am-hide jxl" data-value="2">
+            教学楼：
+            <span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="201">主教学楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="202">综合楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="203">工学楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="204">软件楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="205">实验楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="206">成教楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="207">土木馆</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="208">物理楼</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="209">动力实训</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="210">土木工程实验中心</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="211">建筑工程实训中心</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="212">排球场</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="213">篮球场</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="214">田径场</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="215">柔力球场</span><span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="216">软件学院考场</span>
+
+        </div>
+        <div class="am-form-group  am-hide jxl" data-value="3">
+            教学楼：
+            <span class="am-btn am-btn-primary am-btn-xs floor btn-margin" data-value="301">办公楼</span>
+
+        </div>
+        <div class="am-form-group">
+            <button id="btn" class="am-btn am-btn-success am-btn-block">一键查询</button>
+        </div>
+    </div>
+</div>
+<div style='text-align:center;font-size:20px;color:red'>
+    <span id="result"></span>
+</div>
+<div class="wrap" id="alltable" style="display:none; ">
+    <div class="tabs">
+        <a href="#" hidefocus="true" class="active">上午</a>
+        <a href="#" hidefocus="true">下午</a>
+        <a href="#" hidefocus="true">晚上</a>
+    </div>
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="content-slide">
+                    <div class="am-tabs-bd">
+                        <div id="getdivHight" data-tab-panel-0 class="am-tab-panel am-active">
+                            <table id="table1">
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="content-slide">
+                    <div class="am-tabs-bd">
+                        <div data-tab-panel-0 class="am-tab-panel am-active">
+                            <table id="table2">
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-slide">
+                <div class="content-slide">
+                    <div class="am-tabs-bd">
+                        <div data-tab-panel-0 class="am-tab-panel am-active">
+                            <table id="table3">
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p style="text-align:center; font-size:0.8em;">本查询数据仅供参考
+    <br>
+    <a href="http://blog.csdn.net/boom_man/" target="_black" title="@BoomManPro" data-uk-modal>技术支持 © BoomManPro</a>
+</p>
+<script type="text/javascript">
+
+
+
+    $(document).ready(function () {
+
+        $("#btn").on("click", function () {
+            document.querySelector("#btn").innerHTML = "正在努力加载中...";
+            $("#result").html("");
+            $("#alltable").hide();
+            $("#btn").attr("disabled", true);
+            $.post("/school/sxu_edu/base", {
+                    time: $("#my-start-2").val(), jxlValue: $("#BuildingValue").val()
+                },
+                function (data) {
+                    $("#btn").attr("disabled", false);
+                    document.getElementById("btn").innerHTML = "一键查询";
+                    if (data.code === "SUCCESS") {
+                        var tdData = data.result;
+                        CreateTable(tdData);
+                        $("#alltable").show();
+                        var tabsSwiper = new Swiper('.swiper-container', {
+                            speed: 500,
+                            onSlideChangeStart: function () {
+                                $(".tabs .active").removeClass('active');
+                                $(".tabs a").eq(tabsSwiper.activeIndex).addClass('active');
+                            }
+                        });
+
+                        $(".tabs a").on('touchstart mousedown', function (e) {
+                            e.preventDefault();
+                            $(".tabs .active").removeClass('active');
+                            $(this).addClass('active');
+                            tabsSwiper.swipeTo($(this).index());
+                        });
+
+                        $(".tabs a").click(function (e) {
+                            e.preventDefault();
+                        });
+
+                    } else {
+                        var Date = data.return;
+                        $("#result").html(Date);
+                    }
+                    var divHeight = $("#getdivHight").height();
+                    $(".swiper-container").height(divHeight);
+
+
+                }, 'json');
+        });
+    });
+
+    $('#my-start-2').jeDate({
+        isinitVal: true,
+        format: 'YYYY-MM-DD',
+        marks: ['2017-02-20'],
+    });
+
+    $(function () {
+        var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+        var $myStart2 = $('#my-start-2');
+    })
+    $(document).ready(function () {
+       $(".xq").on('click','span',function () {
+           var $this=$(this);
+           var dataValue=$this.attr("data-value");
+           $(".jxl").filter(function () {
+               return $(this).attr("data-value")===dataValue;
+           }).removeClass("am-hide").addClass("am-active").siblings(".jxl").removeClass("am-active").addClass("am-hide");
+
+       });
+        $(".floor").click(function () {
+            $("#BuildingValue").val($(this).attr('data-value'));
+        });
+    });
+
+
+</script>
+</body>
+
+</html>
