@@ -23,7 +23,6 @@ public class SchoolConfigProperties {
 
     private String schoolRoomDataReferer;
 
-    private String tableName;
 
     private String cookie;
 

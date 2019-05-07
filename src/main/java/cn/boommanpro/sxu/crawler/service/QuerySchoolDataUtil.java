@@ -66,8 +66,8 @@ public class QuerySchoolDataUtil {
         JSONObject allRoomValue = getAllJxlRoomValue(schoolConfigProperties);
         Iterator keys = allRoomValue.keys();
         CodeUtil codeUtil = new CodeUtil();
-        String YZM_Value = codeUtil.getYzmValue(schoolConfigProperties);
-        String Cookie = codeUtil.getCookieStr();
+        String yzmValue = codeUtil.getYzmValue(schoolConfigProperties);
+        String cookie = codeUtil.getCookieStr();
         int num = 0;  // TODO: 2018/1/25 因为返回值变了,所以中间代码需要修改,后续
         while (keys.hasNext()) {
             Object Sel_JXL = keys.next();
@@ -85,10 +85,10 @@ public class QuerySchoolDataUtil {
                 do {
                     if (num / 5 == 1) {
 //                    System.out.println(YZM_Value);
-                        YZM_Value = codeUtil.getYzmValue(schoolConfigProperties);
+                        yzmValue = codeUtil.getYzmValue(schoolConfigProperties);
                         num = 0;
                     }
-                    s = HttpUtil.postRoomValue(Cookie, YZM_Value, DateUtil.getTerm(), Sel_JXL.toString(), Sel_ROOM.toString(), schoolConfigProperties);
+                    s = HttpUtil.postRoomValue(cookie, yzmValue, DateUtil.getTerm(), Sel_JXL.toString(), Sel_ROOM.toString(), schoolConfigProperties);
                     stringStringMap = new JsoupMethod(s).Get_Post_Data();
                     i++;
                     num++;
