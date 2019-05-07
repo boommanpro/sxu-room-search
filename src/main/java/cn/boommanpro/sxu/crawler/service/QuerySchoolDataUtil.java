@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * @author BoomManPro
  */
-public class QuerySchoolDataService {
+public class QuerySchoolDataUtil {
     /**
      * @return {"学年学期":"20171","学校校区":{"坞城校区":"1","大东关校区":"2"}}
      */

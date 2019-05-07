@@ -13,7 +13,6 @@ import cn.boommanpro.sxu.crawler.model.XqJxl;
 import cn.boommanpro.sxu.crawler.model.XxXq;
 import cn.boommanpro.sxu.util.DateUtil;
 import net.sf.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -54,7 +53,7 @@ public class InitSchoolDataService {
 
         while (jxlRooms.size()>0){
             List<JxlRoom> jxlRoomList = popJxlRoomList(jxlRooms, NUM);
-            Map<String, Map<String, String>> roomClassDataByJxlRoomList = QuerySchoolDataService.getRoomClassDataByJxlRoomList(schoolConfigProperties, jxlRoomList);
+            Map<String, Map<String, String>> roomClassDataByJxlRoomList = QuerySchoolDataUtil.getRoomClassDataByJxlRoomList(schoolConfigProperties, jxlRoomList);
             batchUpdateRoomData(jxlRoomList, roomClassDataByJxlRoomList, schoolConfigProperties);
         }
 
@@ -120,7 +119,7 @@ public class InitSchoolDataService {
 
     public void initXxXq( SchoolConfigProperties schoolConfigProperties) {
         xxXqMapper.truncateTable();
-        Map<String, String> xxXqValue = QuerySchoolDataService.getXxXqValue(schoolConfigProperties);
+        Map<String, String> xxXqValue = QuerySchoolDataUtil.getXxXqValue(schoolConfigProperties);
 
         List<XxXq> xxXqList = map2XxXqList(xxXqValue);
         xxXqMapper.insertBatch(xxXqList);
@@ -149,7 +148,7 @@ public class InitSchoolDataService {
         //然后从数据库中查询
         List<String> xqValueList = xxXqMapper.selectAllXqValue();
 
-        JSONObject allXqJxlJson = QuerySchoolDataService.getAllXqJxlValue(schoolConfigProperties);
+        JSONObject allXqJxlJson = QuerySchoolDataUtil.getAllXqJxlValue(schoolConfigProperties);
         List<XqJxl> xqJxlList = json2XqJxlList(xqValueList, allXqJxlJson);
 
         xqJxlMapper.insertBatch( xqJxlList);
@@ -185,7 +184,7 @@ public class InitSchoolDataService {
         jxlRoomMapper.truncateTable();
         //这里获取需要从数据库获取
         List<String> jxlValueList = xqJxlMapper.selectAllJxlValue();
-        JSONObject allJxlRoomJson = QuerySchoolDataService.getAllJxlRoomValue(schoolConfigProperties);
+        JSONObject allJxlRoomJson = QuerySchoolDataUtil.getAllJxlRoomValue(schoolConfigProperties);
         List<JxlRoom> jxlRoomList = json2JxlRoomList(jxlValueList, allJxlRoomJson);
         jxlRoomMapper.insertBatch(jxlRoomList);
     }
