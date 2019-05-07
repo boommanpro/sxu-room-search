@@ -1,9 +1,4 @@
 package cn.boommanpro.sxu.crawler.parse;
-
-
-
-
-
 import cn.boommanpro.sxu.common.StringUtils;
 import cn.boommanpro.sxu.crawler.dto.XxXqPageFruit;
 import cn.boommanpro.sxu.crawler.model.ListWeekStruct;
@@ -26,8 +21,8 @@ import java.util.regex.Pattern;
 public class JsoupMethod {
     private Document document = null;
     private Elements links = null;
-    private String Data = null;
-    private String Value = null;
+    private String data = null;
+    private String value = null;
     private String result;
 
     public JsoupMethod(String result) {
@@ -56,15 +51,15 @@ public class JsoupMethod {
         JSONArray XNXQ = new JSONArray();
         links = document.select("option");
         // 从Html中找出 option 标签
-        // Data 用来存放数据
+        // data 用来存放数据
         for (Element link : links) {
 
-            Data = link.text();
-            if (Data.contains("学年")) {
+            data = link.text();
+            if (data.contains("学年")) {
                 /*
                  * 用来检测jsoup查找错误
                  * */
-//                 System.out.println("学年学期:" + Data + "\t value : " +links.get(i).attr("value"));
+//                 System.out.println("学年学期:" + data + "\t value : " +links.get(i).attr("value"));
                 XNXQ.add(link.attr("value"));
             }
         }
@@ -76,16 +71,16 @@ public class JsoupMethod {
         JSONObject List_Data = new JSONObject();
         JSONObject Result = new JSONObject();
         links = document.select("script");
-        Data = links.toString();
-        Data = Data.substring(Data.indexOf("<option"), Data.indexOf("</select>"));
-        document = Jsoup.parse(Data);
+        data = links.toString();
+        data = data.substring(data.indexOf("<option"), data.indexOf("</select>"));
+        document = Jsoup.parse(data);
         links = document.select("option");
         for (int i = 0; i < links.size(); i++) {
-            Data = links.get(i).text();
-            Value = links.get(i).attr("value");
-            if (!Data.equals("") && !Data.contains("无信息")) {
-                // System.out.println("教学楼:" + Data + "\t value : " + Value);
-                List_Data.put(Data, Value);
+            data = links.get(i).text();
+            value = links.get(i).attr("value");
+            if (!data.equals("") && !data.contains("无信息")) {
+                // System.out.println("教学楼:" + data + "\t value : " + value);
+                List_Data.put(data, value);
             }
         }
         if (BuildingValue != null) {
@@ -218,13 +213,13 @@ public class JsoupMethod {
                 }
             }
 //			System.out.println(Course + "\t" + Teacher + "\t" + WeekTime + "\t" + WeekPart);
-            SetDatatiWeekList(GetWeekTime(WeekTime), GetWeekPart(WeekPart), Course, Teacher);
+            SetDatatiWeekList(getWeekTime(WeekTime), GetWeekPart(WeekPart), Course, Teacher);
         }
 
     }
 
     private void SetDatatiWeekList(List<Integer> TimeList, List<String> PartList, String Course, String Teacher) {
-        boolean Time[] = TimeListToArrayInt(TimeList, PartList);
+        boolean Time[] = timeListToArrayInt(TimeList, PartList);
 
 
         for (int i = 1; i < ListWeek.size() + 1; i++) {
@@ -239,18 +234,18 @@ public class JsoupMethod {
     }
 
 
-    private List<Integer> GetWeekTime(String WeekTime) {
+    private List<Integer> getWeekTime(String weekTime) {
         /*
          * 14-14.---最多5对 1-4,6-13 分为first and sencond second not belive ，not add
          * and stop
          */
         // WeekTime="1-4,6-13,1-4,6-13,1-4,6-13";
 
-        List<Integer> TimeList = new ArrayList<>();
+        List<Integer> timeList = new ArrayList<>();
 
-        String Regex = "(?<first1>\\d{1,2})\\-{0,1}(?<sencond1>\\d{0,2}),{0,1}(?<first2>\\d{0,2})\\-{0,1}(?<sencond2>\\d{0,2}),{0,1}(?<first3>\\d{0,2})\\-{0,1}(?<sencond3>\\d{0,2}),{0,1}(?<first4>\\d{0,2})\\-{0,1}(?<sencond4>\\d{0,2}),{0,1}(?<first5>\\d{0,2})\\-{0,1}(?<sencond5>\\d{0,2}),{0,1}(?<first6>\\d{0,2})\\-{0,1}(?<sencond6>\\d{0,2})";
-        Pattern pattern = Pattern.compile(Regex);
-        Matcher matcher = pattern.matcher(WeekTime);
+        String regex = "(?<first1>\\d{1,2})\\-{0,1}(?<sencond1>\\d{0,2}),{0,1}(?<first2>\\d{0,2})\\-{0,1}(?<sencond2>\\d{0,2}),{0,1}(?<first3>\\d{0,2})\\-{0,1}(?<sencond3>\\d{0,2}),{0,1}(?<first4>\\d{0,2})\\-{0,1}(?<sencond4>\\d{0,2}),{0,1}(?<first5>\\d{0,2})\\-{0,1}(?<sencond5>\\d{0,2}),{0,1}(?<first6>\\d{0,2})\\-{0,1}(?<sencond6>\\d{0,2})";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(weekTime);
         matcher.find();
         boolean AddStatue = true;
         String First = null;
@@ -259,11 +254,11 @@ public class JsoupMethod {
             First = matcher.group("first" + i);
             Second = matcher.group("sencond" + i);
             if (!First.equals("")) {
-                TimeList.add(Integer.parseInt(First));
+                timeList.add(Integer.parseInt(First));
                 if (!Second.equals("")) {
-                    TimeList.add(Integer.parseInt(Second));
+                    timeList.add(Integer.parseInt(Second));
                 } else {
-                    TimeList.add(0);
+                    timeList.add(0);
                 }
             } else {
                 AddStatue = false;
@@ -278,42 +273,42 @@ public class JsoupMethod {
         // System.out.println(TimeList.get(i).intValue());
         // }
 
-        return TimeList;
+        return timeList;
     }
 
-    private boolean[] TimeListToArrayInt(List<Integer> TimeList, List<String> PartList) {
-        boolean Time[] = new boolean[30];
-        int PartSize = PartList.size();
+    private boolean[] timeListToArrayInt(List<Integer> timeList, List<String> partList) {
+        boolean[] time = new boolean[30];
+        int partSize = partList.size();
 
-        int First = 0;
-        int Second = 0;
-        int TimeSize = TimeList.size();
-        String Single = null;
-        if (PartSize != 3) {
-            for (int n = 0; n < TimeSize; n += 2) {
-                First = TimeList.get(n);
-                Second = TimeList.get(n + 1);
+        int first = 0;
+        int second = 0;
+        int timeSize = timeList.size();
+        String single = null;
+        if (partSize != 3) {
+            for (int n = 0; n < timeSize; n += 2) {
+                first = timeList.get(n);
+                second = timeList.get(n + 1);
 
-                if (Second != 0) {
-                    for (int i = First; i <= Second; i++) {
-                        Time[i] = true;
+                if (second != 0) {
+                    for (int i = first; i <= second; i++) {
+                        time[i] = true;
                     }
                 } else {
-                    Time[First] = true;
+                    time[first] = true;
                 }
             }
         } else {
-            Single = PartList.get(2);
-            for (int n = 0; n < TimeSize; n += 2) {
-                First = TimeList.get(n);
-                Second = TimeList.get(n + 1);
-                if (Second != 0) {
-                    for (int i = First; i <= Second; i++) {
-                        if (isSingle(i, Single) != 0)
-                            Time[i] = true;
+            single = partList.get(2);
+            for (int n = 0; n < timeSize; n += 2) {
+                first = timeList.get(n);
+                second = timeList.get(n + 1);
+                if (second != 0) {
+                    for (int i = first; i <= second; i++) {
+                        if (isSingle(i, single) != 0)
+                            time[i] = true;
                     }
                 } else {
-                    Time[First] = true;
+                    time[first] = true;
                 }
             }
         }
@@ -322,14 +317,14 @@ public class JsoupMethod {
          * 测试
          */
 
-        // for(int i=1;i<Time.length;i++){
-        // if(Time[i])
+        // for(int i=1;i<time.length;i++){
+        // if(time[i])
         // System.out.println("This is"+i+"周" +"有课");
         // else{
         // System.out.println("This is"+i+"周" +"无课");
         // }
         // }
-        return Time;
+        return time;
     }
 
     private List<String> GetWeekPart(String WeekPart) {
@@ -370,18 +365,20 @@ public class JsoupMethod {
 
     }
 
-    private int isSingle(int WeekTime, String Single) {
-        switch (Single) {
+    private int isSingle(int weekTime, String single) {
+        switch (single) {
             case "单":
-                if (WeekTime % 2 == 1)
-                    return WeekTime;
-                else
+                if (weekTime % 2 == 1) {
+                    return weekTime;
+                } else {
                     return 0;
+                }
             case "双":
-                if (WeekTime % 2 == 0)
-                    return WeekTime;
-                else
+                if (weekTime % 2 == 0) {
+                    return weekTime;
+                } else {
                     return 0;
+                }
             default:
                 return 0;
         }
