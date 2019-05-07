@@ -21,9 +21,9 @@ public class QuerySchoolDataUtil {
      */
     public static Map<String, String> getXxXqValue(SchoolConfigProperties schoolConfigProperties) {
         String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolXnxq();
-        String result = HttpUtil.getData(url, schoolConfigProperties);
-        KingoSoftParse kingoSoftParse = new KingoSoftParse(result);
-        return kingoSoftParse.getXxxq();
+        String content = HttpUtil.getData(url, schoolConfigProperties);
+
+        return KingoSoftParse.getXxxq(content);
     }
 
     /**
@@ -35,9 +35,9 @@ public class QuerySchoolDataUtil {
         //拼接url
         String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolXnxq();
         //http获取页面信息
-        String result = HttpUtil.getData(url, schoolConfigProperties);
+        String content = HttpUtil.getData(url, schoolConfigProperties);
         //解析获取数据
-        return KingoSoftParse.getTopSemesterYear(result);
+        return KingoSoftParse.getTopSemesterYear(content);
     }
 
     public static Map<String, Map<String, String>> getAllXqJxlValue(SchoolConfigProperties schoolConfigProperties) {
@@ -66,7 +66,6 @@ public class QuerySchoolDataUtil {
     }
 
 
-    // TODO: 2018/4/23 这里提供的是  schoolConfig和 XqJxl两个参数
 
     public static Map<String, Map<String, String>> getRoomClassData(SchoolConfigProperties schoolConfigProperties) {
         Map<String, Map<String, String>> mapList = new TreeMap<>();
@@ -82,7 +81,7 @@ public class QuerySchoolDataUtil {
             Collection<String> values = roomValues.values();
             for (String selRoom : values) {
                 log.trace("key:{}value:{}", key, selRoom);
-                String s;
+                String result;
                 int i = 0;
                 /*
                  *   目的是为了多次判断,防止因为网络原因导致空值
@@ -93,8 +92,8 @@ public class QuerySchoolDataUtil {
                         yzmValue = codeUtil.getYzmValue(schoolConfigProperties);
                         num = 0;
                     }
-                    s = HttpUtil.postRoomValue(cookie, yzmValue, DateUtil.getTerm(), key, selRoom, schoolConfigProperties);
-                    stringStringMap = new KingoSoftParse(s).getPostData();
+                    result = HttpUtil.postRoomValue(cookie, yzmValue, DateUtil.getTerm(), key, selRoom, schoolConfigProperties);
+                    stringStringMap = KingoSoftParse.getPostData(result);
                     i++;
                     num++;
                 } while (stringStringMap == null && i < 5);
@@ -125,7 +124,7 @@ public class QuerySchoolDataUtil {
             do {
 
                 queryResult = HttpUtil.postRoomValue(schoolConfigProperties.getCookie(), schoolConfigProperties.getYzmValue(), DateUtil.getTerm(), jxlRoom.getJxlValue(), jxlRoom.getValue(), schoolConfigProperties);
-                stringStringMap = new KingoSoftParse(queryResult).getPostData();
+                stringStringMap =  KingoSoftParse.getPostData(queryResult);
                 i++;
             } while (stringStringMap == null && i < 5);
 
@@ -140,12 +139,12 @@ public class QuerySchoolDataUtil {
     private static Map<String, String> getRoomValue(String jxlValue, SchoolConfigProperties schoolConfigProperties) {
         String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolRoom() + "?w=150&id=" + jxlValue;
         String result = HttpUtil.getData(url, schoolConfigProperties);
-        return KingoSoftParse.getListData(result, null, jxlValue);
+        return KingoSoftParse.getListData(result);
     }
 
     public static Map<String, String> getXqJxlValue(String schoolZone, SchoolConfigProperties schoolConfigProperties) {
         String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolJxl() + "?w=150&id=" + schoolZone;
         String result = HttpUtil.getData(url, schoolConfigProperties);
-        return KingoSoftParse.getListData(result, schoolZone, null);
+        return KingoSoftParse.getListData(result);
     }
 }
