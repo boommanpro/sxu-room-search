@@ -87,7 +87,7 @@ public class DateUtil {
 
 //        String Url=SchoolConfigProperties.Host.getURL()+SchoolConfigProperties.XNXQ_XQ.getURL();
 //
-//        String XNXQ_XQ_Data= Data.getData(Url);
+//        String XNXQ_XQ_Data= Data.queryData(Url);
 //
 //        KingoSoftParse parse=new KingoSoftParse(XNXQ_XQ_Data);
 //

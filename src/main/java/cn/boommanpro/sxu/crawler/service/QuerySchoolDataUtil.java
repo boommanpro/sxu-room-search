@@ -6,7 +6,7 @@ import cn.boommanpro.sxu.crawler.model.JxlRoom;
 import cn.boommanpro.sxu.crawler.parse.KingoSoftParse;
 import cn.boommanpro.sxu.util.CodeUtil;
 import cn.boommanpro.sxu.util.DateUtil;
-import cn.boommanpro.sxu.util.HttpUtil;
+import cn.boommanpro.sxu.util.KingoSoftRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -21,7 +21,7 @@ public class QuerySchoolDataUtil {
      */
     public static Map<String, String> getXxXqValue(SchoolConfigProperties schoolConfigProperties) {
         String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolXnxq();
-        String content = HttpUtil.getData(url, schoolConfigProperties);
+        String content = KingoSoftRequest.queryData(url, schoolConfigProperties);
 
         return KingoSoftParse.getXxxq(content);
     }
@@ -35,7 +35,7 @@ public class QuerySchoolDataUtil {
         //拼接url
         String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolXnxq();
         //http获取页面信息
-        String content = HttpUtil.getData(url, schoolConfigProperties);
+        String content = KingoSoftRequest.queryData(url, schoolConfigProperties);
         //解析获取数据
         return KingoSoftParse.getTopSemesterYear(content);
     }
@@ -92,7 +92,7 @@ public class QuerySchoolDataUtil {
                         yzmValue = codeUtil.getYzmValue(schoolConfigProperties);
                         num = 0;
                     }
-                    result = HttpUtil.postRoomValue(cookie, yzmValue, DateUtil.getTerm(), key, selRoom, schoolConfigProperties);
+                    result = KingoSoftRequest.postRoomValue(cookie, yzmValue, DateUtil.getTerm(), key, selRoom, schoolConfigProperties);
                     stringStringMap = KingoSoftParse.getPostData(result);
                     i++;
                     num++;
@@ -123,7 +123,7 @@ public class QuerySchoolDataUtil {
             Map<String, String> stringStringMap;
             do {
 
-                queryResult = HttpUtil.postRoomValue(schoolConfigProperties.getCookie(), schoolConfigProperties.getYzmValue(), DateUtil.getTerm(), jxlRoom.getJxlValue(), jxlRoom.getValue(), schoolConfigProperties);
+                queryResult = KingoSoftRequest.postRoomValue(schoolConfigProperties.getCookie(), schoolConfigProperties.getYzmValue(), DateUtil.getTerm(), jxlRoom.getJxlValue(), jxlRoom.getValue(), schoolConfigProperties);
                 stringStringMap =  KingoSoftParse.getPostData(queryResult);
                 i++;
             } while (stringStringMap == null && i < 5);
@@ -138,13 +138,13 @@ public class QuerySchoolDataUtil {
 
     private static Map<String, String> getRoomValue(String jxlValue, SchoolConfigProperties schoolConfigProperties) {
         String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolRoom() + "?w=150&id=" + jxlValue;
-        String result = HttpUtil.getData(url, schoolConfigProperties);
+        String result = KingoSoftRequest.queryData(url, schoolConfigProperties);
         return KingoSoftParse.getListData(result);
     }
 
     public static Map<String, String> getXqJxlValue(String schoolZone, SchoolConfigProperties schoolConfigProperties) {
         String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolJxl() + "?w=150&id=" + schoolZone;
-        String result = HttpUtil.getData(url, schoolConfigProperties);
+        String result = KingoSoftRequest.queryData(url, schoolConfigProperties);
         return KingoSoftParse.getListData(result);
     }
 }
