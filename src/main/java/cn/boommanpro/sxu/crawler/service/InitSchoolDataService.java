@@ -12,11 +12,13 @@ import cn.boommanpro.sxu.crawler.model.RoomData;
 import cn.boommanpro.sxu.crawler.model.XqJxl;
 import cn.boommanpro.sxu.crawler.model.XxXq;
 import cn.boommanpro.sxu.util.DateUtil;
-import net.sf.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class InitSchoolDataService {
@@ -148,7 +150,7 @@ public class InitSchoolDataService {
         //然后从数据库中查询
         List<String> xqValueList = xxXqMapper.selectAllXqValue();
 
-        JSONObject allXqJxlJson = QuerySchoolDataUtil.getAllXqJxlValue(schoolConfigProperties);
+        Map<String, Map<String, String>> allXqJxlJson = QuerySchoolDataUtil.getAllXqJxlValue(schoolConfigProperties);
         List<XqJxl> xqJxlList = json2XqJxlList(xqValueList, allXqJxlJson);
 
         xqJxlMapper.insertBatch( xqJxlList);
@@ -156,18 +158,18 @@ public class InitSchoolDataService {
     }
 
 
-    private List<XqJxl> json2XqJxlList( List<String> xqValueList,JSONObject allXqJxlJson){
+    private List<XqJxl> json2XqJxlList( List<String> xqValueList,  Map<String, Map<String, String>>  allXqJxlJson){
         List<XqJxl> xqJxlList = new ArrayList<>();
-        Iterator xqs = allXqJxlJson.keys();
+
         XqJxl xqJxl;
         LocalDateTime localDateTime;
         for (String xqValue : xqValueList) {
-            JSONObject jxlJson = (JSONObject) allXqJxlJson.get(xqValue);
-            Iterator jxls = jxlJson.keys();
-            while (jxls.hasNext()) {
+            Map<String, String> jxlJson = allXqJxlJson.get(xqValue);
+
+            Set<String> jxls = jxlJson.keySet();
+            for (String jxl : jxls) {
                 localDateTime = LocalDateTime.now();
-                String jxl = jxls.next().toString();
-                String value = jxlJson.get(jxl).toString();
+                String value = jxlJson.get(jxl);
                 xqJxl = new XqJxl(xqValue, jxl, value);
                 xqJxl.setCreateDate(localDateTime);
                 xqJxl.setUpdateDate(localDateTime);
@@ -184,28 +186,28 @@ public class InitSchoolDataService {
         jxlRoomMapper.truncateTable();
         //这里获取需要从数据库获取
         List<String> jxlValueList = xqJxlMapper.selectAllJxlValue();
-        JSONObject allJxlRoomJson = QuerySchoolDataUtil.getAllJxlRoomValue(schoolConfigProperties);
+        Map<String, Map<String, String>> allJxlRoomJson = QuerySchoolDataUtil.getAllJxlRoomValue(schoolConfigProperties);
         List<JxlRoom> jxlRoomList = json2JxlRoomList(jxlValueList, allJxlRoomJson);
         jxlRoomMapper.insertBatch(jxlRoomList);
     }
 
-    private List<JxlRoom> json2JxlRoomList( List<String> jxlValueList,JSONObject allJxlRoomJson){
+    private List<JxlRoom> json2JxlRoomList( List<String> jxlValueList,  Map<String, Map<String, String>> allJxlRoomJson){
         List<JxlRoom> jxlRoomList = new ArrayList<>();
 
         JxlRoom jxlRoom;
         LocalDateTime localDateTime;
         for (String jxlValue : jxlValueList) {
-            JSONObject roomsJson = (JSONObject) allJxlRoomJson.get(jxlValue);
-            Iterator rooms = roomsJson.keys();
-            while (rooms.hasNext()) {
+            Map<String, String> roomsJson = allJxlRoomJson.get(jxlValue);
+            Set<String> rooms = roomsJson.keySet();
+            for (String room : rooms) {
                 localDateTime = LocalDateTime.now();
-                String name = rooms.next().toString();
-                String value = roomsJson.get(name).toString();
-                jxlRoom = new JxlRoom(jxlValue, name, value);
+                String value = roomsJson.get(room);
+                jxlRoom = new JxlRoom(jxlValue, room, value);
                 jxlRoom.setCreateDate(localDateTime);
                 jxlRoom.setUpdateDate(localDateTime);
                 jxlRoomList.add(jxlRoom);
             }
+
         }
         return jxlRoomList;
     }

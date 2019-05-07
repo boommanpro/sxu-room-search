@@ -1,14 +1,12 @@
 package cn.boommanpro.sxu.crawler.service;
 
 
-
 import cn.boommanpro.sxu.config.SchoolConfigProperties;
-import cn.boommanpro.sxu.crawler.parse.JsoupMethod;
 import cn.boommanpro.sxu.crawler.model.JxlRoom;
+import cn.boommanpro.sxu.crawler.parse.KingoSoftParse;
 import cn.boommanpro.sxu.util.CodeUtil;
 import cn.boommanpro.sxu.util.DateUtil;
 import cn.boommanpro.sxu.util.HttpUtil;
-import net.sf.json.JSONObject;
 
 import java.util.*;
 
@@ -22,40 +20,47 @@ public class QuerySchoolDataUtil {
     public static Map<String, String> getXxXqValue(SchoolConfigProperties schoolConfigProperties) {
         String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolXnxq();
         String result = HttpUtil.getData(url, schoolConfigProperties);
-        JsoupMethod jsoupMethod = new JsoupMethod(result);
-        return jsoupMethod.getXxxq();
+        KingoSoftParse kingoSoftParse = new KingoSoftParse(result);
+        return kingoSoftParse.getXxxq();
     }
 
-    public static String getXnxqValue(SchoolConfigProperties schoolConfigProperties) {
+    /**
+     * 获取学年学期Map
+     * <p>
+     * 原方法名称 xnXq
+     */
+    public static String getTopSemesterYear(SchoolConfigProperties schoolConfigProperties) {
+        //拼接url
         String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolXnxq();
+        //http获取页面信息
         String result = HttpUtil.getData(url, schoolConfigProperties);
-        JsoupMethod jsoupMethod = new JsoupMethod(result);
-        return jsoupMethod.getXnxq();
+        //解析获取数据
+        return KingoSoftParse.getTopSemesterYear(result);
     }
 
-    public static JSONObject getAllXqJxlValue(SchoolConfigProperties schoolConfigProperties) {
-        // TODO: 2018/1/25 返回应该做成hashMap
-        JSONObject jsonObject = new JSONObject();
+    public static Map<String, Map<String, String>> getAllXqJxlValue(SchoolConfigProperties schoolConfigProperties) {
         Map<String, String> xxXqValue = getXxXqValue(schoolConfigProperties);
+        Map<String, Map<String, String>> xqJxlMap = new HashMap<>(xxXqValue.size());
         Collection<String> values = xxXqValue.values();
-        for (Object value : values) {
-            jsonObject.put(value, getXqJxlValue((String) value, schoolConfigProperties));
+        for (String value : values) {
+            xqJxlMap.put(value, getXqJxlValue(value, schoolConfigProperties));
         }
-        return jsonObject;
+        return xqJxlMap;
     }
 
-    public static JSONObject getAllJxlRoomValue(SchoolConfigProperties schoolConfigProperties) {
-        // TODO: 2018/1/25 返回应该做成hashMap
-        JSONObject jsonObject = new JSONObject();
-        JSONObject allXqJxlValue = getAllXqJxlValue(schoolConfigProperties);
-        Collection values = allXqJxlValue.values();
-        for (Object value : values) {
-            Collection jxlValues = ((JSONObject) value).values();
-            for (Object jxlValue : jxlValues) {
-                jsonObject.put(jxlValue, getRoomValue((String) jxlValue, schoolConfigProperties));
+    public static Map<String, Map<String, String>> getAllJxlRoomValue(SchoolConfigProperties schoolConfigProperties) {
+
+        Map<String, Map<String, String>> allXqJxlValue = getAllXqJxlValue(schoolConfigProperties);
+        //必定比这个初始化大小大 随他增加吧
+        Map<String, Map<String, String>> jxlRoomMap = new HashMap<>(allXqJxlValue.size());
+        Collection<Map<String, String>> values = allXqJxlValue.values();
+        for (Map<String, String> value : values) {
+            Collection<String> jxlValues = value.values();
+            for (String jxlValue : jxlValues) {
+                jxlRoomMap.put(jxlValue, getRoomValue(jxlValue, schoolConfigProperties));
             }
         }
-        return jsonObject;
+        return jxlRoomMap;
     }
 
 
@@ -63,17 +68,20 @@ public class QuerySchoolDataUtil {
 
     public static Map<String, Map<String, String>> getRoomClassData(SchoolConfigProperties schoolConfigProperties) {
         Map<String, Map<String, String>> mapList = new TreeMap<>();
-        JSONObject allRoomValue = getAllJxlRoomValue(schoolConfigProperties);
-        Iterator keys = allRoomValue.keys();
+
+
+        Map<String, Map<String, String>> allRoomValue = getAllJxlRoomValue(schoolConfigProperties);
+        Set<String> keys = allRoomValue.keySet();
         CodeUtil codeUtil = new CodeUtil();
         String yzmValue = codeUtil.getYzmValue(schoolConfigProperties);
         String cookie = codeUtil.getCookieStr();
-        int num = 0;  // TODO: 2018/1/25 因为返回值变了,所以中间代码需要修改,后续
-        while (keys.hasNext()) {
-            Object Sel_JXL = keys.next();
-            JSONObject roomValues = (JSONObject) allRoomValue.get(Sel_JXL);
-            Collection values = roomValues.values();
-            for (Object Sel_ROOM : values) {
+        // TODO: 2018/1/25 因为返回值变了,所以中间代码需要修改,后续
+        int num = 0;
+
+        for (String key : keys) {
+            Map<String, String> roomValues = allRoomValue.get(key);
+            Collection<String> values = roomValues.values();
+            for (String selRoom : values) {
 //                System.out.println("key="+Sel_JXL+"value="+Sel_ROOM);
                 //对于为空的是否需要继续查询
                 String s;
@@ -88,8 +96,8 @@ public class QuerySchoolDataUtil {
                         yzmValue = codeUtil.getYzmValue(schoolConfigProperties);
                         num = 0;
                     }
-                    s = HttpUtil.postRoomValue(cookie, yzmValue, DateUtil.getTerm(), Sel_JXL.toString(), Sel_ROOM.toString(), schoolConfigProperties);
-                    stringStringMap = new JsoupMethod(s).Get_Post_Data();
+                    s = HttpUtil.postRoomValue(cookie, yzmValue, DateUtil.getTerm(),key, selRoom, schoolConfigProperties);
+                    stringStringMap = new KingoSoftParse(s).getPostData();
                     i++;
                     num++;
                 } while (stringStringMap == null && i < 5);
@@ -97,7 +105,7 @@ public class QuerySchoolDataUtil {
 //                System.out.println(stringStringMap);
 
                 if (stringStringMap != null) {
-                    mapList.put(Sel_ROOM.toString(), stringStringMap);
+                    mapList.put(selRoom.toString(), stringStringMap);
                 }
 
             }
@@ -121,7 +129,7 @@ public class QuerySchoolDataUtil {
             do {
 
                 s = HttpUtil.postRoomValue(schoolConfigProperties.getCookie(), schoolConfigProperties.getYzmValue(), DateUtil.getTerm(), jxlRoom.getJxlValue(), jxlRoom.getValue(), schoolConfigProperties);
-                stringStringMap = new JsoupMethod(s).Get_Post_Data();
+                stringStringMap = new KingoSoftParse(s).getPostData();
                 i++;
             } while (stringStringMap == null && i < 5);
 
@@ -133,43 +141,15 @@ public class QuerySchoolDataUtil {
         return mapList;
     }
 
-
-
-
-
-
-
-
-
-
-    public static Map<String, String> getSingleRoomClassTest(SchoolConfigProperties schoolConfigProperties) {
-        CodeUtil codeUtil = new CodeUtil();
-        String YZM_Value = codeUtil.getYzmValue(schoolConfigProperties);
-//        System.out.println(YZM_Value);
-
-        String cookie = codeUtil.getCookieStr();
-        String term = "20171";
-        String selJxl = "101";
-        String selRoom = "1010101";
-        String s = HttpUtil.postRoomValue(cookie, YZM_Value, term, selJxl, selRoom, schoolConfigProperties);
-        // TODO: 2018/1/25 这里解析操作
-        JsoupMethod jsoupMethod = new JsoupMethod(s);
-        return jsoupMethod.Get_Post_Data();
+    private static Map<String, String> getRoomValue(String jxlValue, SchoolConfigProperties schoolConfigProperties) {
+        String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolRoom() + "?w=150&id=" + jxlValue;
+        String result = HttpUtil.getData(url, schoolConfigProperties);
+        return KingoSoftParse.getListData(result, null, jxlValue);
     }
 
-    private static JSONObject getRoomValue(String jxlValue, SchoolConfigProperties schoolConfigProperties) {
-        String Url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolRoom() + "?w=150&id=" + jxlValue;
-        String result = HttpUtil.getData(Url, schoolConfigProperties);
-        JsoupMethod jsoupMethod = new JsoupMethod(result);
-        JSONObject jsonObject = jsoupMethod.Get_List_Data(null, jxlValue);
-        return jsonObject.getJSONObject(jxlValue);
-    }
-
-    private static JSONObject getXqJxlValue(String schoolZone, SchoolConfigProperties schoolConfigProperties) {
+    public static Map<String, String> getXqJxlValue(String schoolZone, SchoolConfigProperties schoolConfigProperties) {
         String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolJxl() + "?w=150&id=" + schoolZone;
         String result = HttpUtil.getData(url, schoolConfigProperties);
-        JsoupMethod jsoupMethod = new JsoupMethod(result);
-        JSONObject jsonObject = jsoupMethod.Get_List_Data(schoolZone, null);
-        return jsonObject.getJSONObject(schoolZone);
+        return KingoSoftParse.getListData(result, schoolZone, null);
     }
 }

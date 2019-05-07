@@ -89,7 +89,7 @@ public class DateUtil {
 //
 //        String XNXQ_XQ_Data= Data.getData(Url);
 //
-//        JsoupMethod parse=new JsoupMethod(XNXQ_XQ_Data);
+//        KingoSoftParse parse=new KingoSoftParse(XNXQ_XQ_Data);
 //
 //        JSONObject pojo=parse.getXxxq();
 //

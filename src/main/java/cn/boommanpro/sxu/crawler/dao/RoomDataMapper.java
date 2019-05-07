@@ -1,8 +1,6 @@
 package cn.boommanpro.sxu.crawler.dao;
 
 
-
-import cn.boommanpro.sxu.crawler.dto.RoomDataDto;
 import cn.boommanpro.sxu.crawler.model.RoomData;
 import org.apache.ibatis.annotations.Param;
 

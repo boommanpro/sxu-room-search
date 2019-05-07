@@ -1,12 +1,12 @@
 package cn.boommanpro.sxu.crawler.parse;
+
 import cn.boommanpro.sxu.common.StringUtils;
 import cn.boommanpro.sxu.crawler.dto.XxXqPageFruit;
 import cn.boommanpro.sxu.crawler.model.ListWeekStruct;
-import cn.boommanpro.sxu.util.DateUtil;
 import cn.boommanpro.sxu.model.ClassRoomPage;
+import cn.boommanpro.sxu.util.DateUtil;
 import lombok.extern.log4j.Log4j2;
 import me.ghui.fruit.Fruit;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,84 +18,75 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Log4j2
-public class JsoupMethod {
+public class KingoSoftParse {
     private Document document = null;
     private Elements links = null;
     private String data = null;
     private String value = null;
     private String result;
 
-    public JsoupMethod(String result) {
+    public KingoSoftParse(String result) {
         document = Jsoup.parse(result);
-        this.result=result;
+        this.result = result;
     }
 
     /**
      * @return 获得学年学期和校区
      */
-    public  Map<String, String> getXxxq() {
+    public Map<String, String> getXxxq() {
 
         XxXqPageFruit xxXqPageFruit = new Fruit().fromHtml(result, XxXqPageFruit.class);
         Map<String, String> xxxqMap = new HashMap<>();
-        for (XxXqPageFruit.XxXq xxXq: xxXqPageFruit.getXxXqList()) {
-            if (StringUtils.notBlank(xxXq.getName(),xxXq.getValue())){
+        for (XxXqPageFruit.XxXq xxXq : xxXqPageFruit.getXxXqList()) {
+            if (StringUtils.notBlank(xxXq.getName(), xxXq.getValue())) {
                 xxxqMap.put(xxXq.getValue(), xxXq.getName());
             }
         }
         return xxxqMap;
     }
+
     /**
      * @return 获得学年学期和校区
      */
-    public String getXnxq() {
-        JSONArray XNXQ = new JSONArray();
-        links = document.select("option");
-        // 从Html中找出 option 标签
-        // data 用来存放数据
-        for (Element link : links) {
+    public static String getTopSemesterYear(String content) {
 
+        Document document = Jsoup.parse(content);
+        Elements links = document.select("option");
+        String data;
+        for (Element link : links) {
             data = link.text();
             if (data.contains("学年")) {
-                /*
-                 * 用来检测jsoup查找错误
-                 * */
-//                 System.out.println("学年学期:" + data + "\t value : " +links.get(i).attr("value"));
-                XNXQ.add(link.attr("value"));
+                return link.text();
             }
         }
-
-        return  XNXQ.get(0).toString();
+        return "暂时获取不到任何数据";
     }
 
-    public JSONObject Get_List_Data(String SchoolZone, String BuildingValue) {
-        JSONObject List_Data = new JSONObject();
-        JSONObject Result = new JSONObject();
-        links = document.select("script");
-        data = links.toString();
+    public static     Map<String,String> getListData(String content, String schoolZone, String buildingValue) {
+        //1.Jsoup解析为Document
+        Document document = Jsoup.parse(content);
+
+        Map<String,String> listData = new LinkedHashMap<>();
+        Elements links = document.select("script");
+        String value;
+        String data = links.toString();
         data = data.substring(data.indexOf("<option"), data.indexOf("</select>"));
         document = Jsoup.parse(data);
         links = document.select("option");
-        for (int i = 0; i < links.size(); i++) {
-            data = links.get(i).text();
-            value = links.get(i).attr("value");
-            if (!data.equals("") && !data.contains("无信息")) {
-                // System.out.println("教学楼:" + data + "\t value : " + value);
-                List_Data.put(data, value);
+        for (Element link : links) {
+            data = link.text();
+            value = link.attr("value");
+            if (StringUtils.notBlank(data) && !data.contains("无信息")) {
+                listData.put(data, value);
             }
         }
-        if (BuildingValue != null) {
-            Result.put(BuildingValue, List_Data);
-        } else {
-            Result.put(SchoolZone, List_Data);
-        }
-        // System.out.println(Result);
-        return Result;
 
+        return listData;
     }
 
     List<ListWeekStruct.Week> ListWeek;
 
-    public Map<String, String> Get_Post_Data() {
+    public Map<String, String> getPostData() {
 
 // TODO: 2018/5/2 课表清空可能不一样
 
@@ -110,21 +101,26 @@ public class JsoupMethod {
          *
          */
         ClassRoomPage classRoomPage = new Fruit().fromHtml(result, ClassRoomPage.class);
-        if (classRoomPage.getTable()!=null){
-            for (int i = 0,tableSize=classRoomPage.table.size(); i < tableSize; i++) {
-                ClassRoomPage.Table table=classRoomPage.table.get(i);
+        if (classRoomPage.getTable() != null) {
+            for (int i = 0, tableSize = classRoomPage.table.size(); i < tableSize; i++) {
+                ClassRoomPage.Table table = classRoomPage.table.get(i);
                 int columnNumber = table.getColumnNumber();
-                switch (columnNumber){
-                    case 1:break;
-                    case 13:GetWeekData(i,11);break;
-                    case 6:GetWeekData(i,0);break;
+                switch (columnNumber) {
+                    case 1:
+                        break;
+                    case 13:
+                        GetWeekData(i, 11);
+                        break;
+                    case 6:
+                        GetWeekData(i, 0);
+                        break;
                     default:
-                        if (i!=0){
+                        if (i != 0) {
                             log.info(columnNumber);
                             log.info("需要查看是否需要重新设计");
                             log.info(result);
                         }
-                         break;
+                        break;
                 }
             }
         }
@@ -170,7 +166,7 @@ public class JsoupMethod {
                         date = DateUtil.weekNumberToDateStr(m + 1, i);
 //                        contentJson.put(j, new DayCourse(ListWeek.get(m).GetDay(i).GetCourse(j).getCourse(), ListWeek.get(m).GetDay(i).GetCourse(j).getTeacher()));
                         JSONObject courseTeacher = new JSONObject();
-                        courseTeacher.put(ListWeek.get(m).GetDay(i).GetCourse(j).getCourse(),ListWeek.get(m).GetDay(i).GetCourse(j).getTeacher());
+                        courseTeacher.put(ListWeek.get(m).GetDay(i).GetCourse(j).getCourse(), ListWeek.get(m).GetDay(i).GetCourse(j).getTeacher());
                         contentJson.put(j, courseTeacher);
 
                     }
