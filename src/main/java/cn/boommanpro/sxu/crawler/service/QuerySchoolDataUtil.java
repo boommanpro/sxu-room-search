@@ -7,12 +7,14 @@ import cn.boommanpro.sxu.crawler.parse.KingoSoftParse;
 import cn.boommanpro.sxu.util.CodeUtil;
 import cn.boommanpro.sxu.util.DateUtil;
 import cn.boommanpro.sxu.util.HttpUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
 /**
  * @author BoomManPro
  */
+@Slf4j
 public class QuerySchoolDataUtil {
     /**
      * @return {"学年学期":"20171","学校校区":{"坞城校区":"1","大东关校区":"2"}}
@@ -68,22 +70,18 @@ public class QuerySchoolDataUtil {
 
     public static Map<String, Map<String, String>> getRoomClassData(SchoolConfigProperties schoolConfigProperties) {
         Map<String, Map<String, String>> mapList = new TreeMap<>();
-
-
         Map<String, Map<String, String>> allRoomValue = getAllJxlRoomValue(schoolConfigProperties);
         Set<String> keys = allRoomValue.keySet();
         CodeUtil codeUtil = new CodeUtil();
         String yzmValue = codeUtil.getYzmValue(schoolConfigProperties);
         String cookie = codeUtil.getCookieStr();
-        // TODO: 2018/1/25 因为返回值变了,所以中间代码需要修改,后续
         int num = 0;
 
         for (String key : keys) {
             Map<String, String> roomValues = allRoomValue.get(key);
             Collection<String> values = roomValues.values();
             for (String selRoom : values) {
-//                System.out.println("key="+Sel_JXL+"value="+Sel_ROOM);
-                //对于为空的是否需要继续查询
+                log.trace("key:{}value:{}", key, selRoom);
                 String s;
                 int i = 0;
                 /*
@@ -92,20 +90,18 @@ public class QuerySchoolDataUtil {
                 Map<String, String> stringStringMap;
                 do {
                     if (num / 5 == 1) {
-//                    System.out.println(YZM_Value);
                         yzmValue = codeUtil.getYzmValue(schoolConfigProperties);
                         num = 0;
                     }
-                    s = HttpUtil.postRoomValue(cookie, yzmValue, DateUtil.getTerm(),key, selRoom, schoolConfigProperties);
+                    s = HttpUtil.postRoomValue(cookie, yzmValue, DateUtil.getTerm(), key, selRoom, schoolConfigProperties);
                     stringStringMap = new KingoSoftParse(s).getPostData();
                     i++;
                     num++;
                 } while (stringStringMap == null && i < 5);
 
-//                System.out.println(stringStringMap);
-
+                log.trace("stringStringMap:{}", stringStringMap);
                 if (stringStringMap != null) {
-                    mapList.put(selRoom.toString(), stringStringMap);
+                    mapList.put(selRoom, stringStringMap);
                 }
 
             }
@@ -120,16 +116,16 @@ public class QuerySchoolDataUtil {
 
         for (JxlRoom jxlRoom : jxlRoomList) {
 
-            String s;
+            String queryResult;
             int i = 0;
             /*
-             *   目的是为了多次判断,防止因为网络原因导致空值
+             *   目的是为了多次判断,防止因为网络原因导致空值 突破网站限制爬虫
              */
             Map<String, String> stringStringMap;
             do {
 
-                s = HttpUtil.postRoomValue(schoolConfigProperties.getCookie(), schoolConfigProperties.getYzmValue(), DateUtil.getTerm(), jxlRoom.getJxlValue(), jxlRoom.getValue(), schoolConfigProperties);
-                stringStringMap = new KingoSoftParse(s).getPostData();
+                queryResult = HttpUtil.postRoomValue(schoolConfigProperties.getCookie(), schoolConfigProperties.getYzmValue(), DateUtil.getTerm(), jxlRoom.getJxlValue(), jxlRoom.getValue(), schoolConfigProperties);
+                stringStringMap = new KingoSoftParse(queryResult).getPostData();
                 i++;
             } while (stringStringMap == null && i < 5);
 
