@@ -23,13 +23,19 @@ import java.util.regex.Pattern;
 @Log4j2
 public class KingoSoftParse {
 
+    private static final int TWO = 2;
+
+    private static final String WEEK_TIME_REGEX = "(?<first1>\\d{1,2})\\-{0,1}(?<sencond1>\\d{0,2}),{0,1}(?<first2>\\d{0,2})\\-{0,1}(?<sencond2>\\d{0,2}),{0,1}(?<first3>\\d{0,2})\\-{0,1}(?<sencond3>\\d{0,2}),{0,1}(?<first4>\\d{0,2})\\-{0,1}(?<sencond4>\\d{0,2}),{0,1}(?<first5>\\d{0,2})\\-{0,1}(?<sencond5>\\d{0,2}),{0,1}(?<first6>\\d{0,2})\\-{0,1}(?<sencond6>\\d{0,2})";
+    private static final String WEEK_PART_REGEX = "(?<WeekDay>[\u4e00-\u9fa5])" + "\\[" + "(?<PartNumfirst>\\d{0,2})"
+            + "\\-{0,1}(?<PartNumsecond>\\d{0,2})" + "[\u4e00-\u9fa5]\\]{0,1}" + "(?<Single>[\u4e00-\u9fa5]{0,1})";
+
     /**
      * @return 获得学年学期和校区
      */
     public static Map<String, String> getXxxq(String content) {
 
         XxXqPageFruit xxXqPageFruit = new Fruit().fromHtml(content, XxXqPageFruit.class);
-        Map<String, String> xxxqMap = new HashMap<>();
+        Map<String, String> xxxqMap = new HashMap<>(xxXqPageFruit.getXxXqList().size());
         for (XxXqPageFruit.XxXq xxXq : xxXqPageFruit.getXxXqList()) {
             if (StringUtils.notBlank(xxXq.getName(), xxXq.getValue())) {
                 xxxqMap.put(xxXq.getValue(), xxXq.getName());
@@ -213,19 +219,19 @@ public class KingoSoftParse {
 
         List<Integer> timeList = new ArrayList<>();
 
-        String regex = "(?<first1>\\d{1,2})\\-{0,1}(?<sencond1>\\d{0,2}),{0,1}(?<first2>\\d{0,2})\\-{0,1}(?<sencond2>\\d{0,2}),{0,1}(?<first3>\\d{0,2})\\-{0,1}(?<sencond3>\\d{0,2}),{0,1}(?<first4>\\d{0,2})\\-{0,1}(?<sencond4>\\d{0,2}),{0,1}(?<first5>\\d{0,2})\\-{0,1}(?<sencond5>\\d{0,2}),{0,1}(?<first6>\\d{0,2})\\-{0,1}(?<sencond6>\\d{0,2})";
-        Pattern pattern = Pattern.compile(regex);
+
+        Pattern pattern = Pattern.compile(WEEK_TIME_REGEX);
         Matcher matcher = pattern.matcher(weekTime);
         matcher.find();
         boolean addStatue = true;
-        String first = null;
-        String second = null;
+        String first;
+        String second;
         for (int i = 1; i <= 6 && addStatue; i++) {
             first = matcher.group("first" + i);
             second = matcher.group("sencond" + i);
-            if (!first.equals("")) {
+            if (StringUtils.notBlank(first)) {
                 timeList.add(Integer.parseInt(first));
-                if (!second.equals("")) {
+                if (StringUtils.notBlank(second)) {
                     timeList.add(Integer.parseInt(second));
                 } else {
                     timeList.add(0);
@@ -243,10 +249,10 @@ public class KingoSoftParse {
         boolean[] time = new boolean[30];
         int partSize = partList.size();
 
-        int first = 0;
-        int second = 0;
+        int first;
+        int second;
         int timeSize = timeList.size();
-        String single = null;
+        String single;
         if (partSize != 3) {
             for (int n = 0; n < timeSize; n += 2) {
                 first = timeList.get(n);
@@ -279,9 +285,9 @@ public class KingoSoftParse {
         if (log.isTraceEnabled()) {
             for (int i = 1; i < time.length; i++) {
                 if (time[i]) {
-                    System.out.println("This is" + i + "周" + "有课");
+                    log.trace("This is {}  周有课",i);
                 } else {
-                    System.out.println("This is" + i + "周" + "无课");
+                    log.trace("This is {}  周无课",i);
                 }
             }
         }
@@ -297,13 +303,12 @@ public class KingoSoftParse {
          * PartList if have three now this is juidge is Single if 1-2返回一 if3-4
          * 返回二 if 5-6 返回三 以此类推
          */
-        String weekDay = null;
-        String partNumFirst = null;
-        String partNumSecond = null;
-        String single = null;
-        String regex = "(?<WeekDay>[\u4e00-\u9fa5])" + "\\[" + "(?<PartNumfirst>\\d{0,2})"
-                + "\\-{0,1}(?<PartNumsecond>\\d{0,2})" + "[\u4e00-\u9fa5]\\]{0,1}" + "(?<Single>[\u4e00-\u9fa5]{0,1})";
-        Pattern pattern = Pattern.compile(regex);
+        String weekDay;
+        String partNumFirst;
+        String partNumSecond;
+        String single;
+
+        Pattern pattern = Pattern.compile(WEEK_PART_REGEX);
         Matcher matcher = pattern.matcher(weekPart);
         matcher.find();
         weekDay = matcher.group("WeekDay");
@@ -323,13 +328,13 @@ public class KingoSoftParse {
     private static int isSingle(int weekTime, String single) {
         switch (single) {
             case "单":
-                if (weekTime % 2 == 1) {
+                if (weekTime % TWO == 1) {
                     return weekTime;
                 } else {
                     return 0;
                 }
             case "双":
-                if (weekTime % 2 == 0) {
+                if (weekTime % TWO == 0) {
                     return weekTime;
                 } else {
                     return 0;
