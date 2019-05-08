@@ -126,7 +126,7 @@
             $("#result").html("");
             $("#alltable").hide();
             $("#btn").attr("disabled", true);
-            $.post("/school/sxu_edu/base", {
+            $.post("/query", {
                     time: $("#my-start-2").val(), jxlValue: $("#BuildingValue").val()
                 },
                 function (data) {
