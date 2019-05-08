@@ -31,14 +31,24 @@ public class QuerySchoolDataUtil {
      * <p>
      * 原方法名称 xnXq
      */
-    public static String getTopSemesterYear(SchoolConfigProperties schoolConfigProperties) {
+    public static String getTopSemesterYearDescription(SchoolConfigProperties schoolConfigProperties) {
         //拼接url
         String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolXnxq();
         //http获取页面信息
         String content = KingoSoftRequest.queryData(url, schoolConfigProperties);
         //解析获取数据
-        return KingoSoftParse.getTopSemesterYear(content);
+        return KingoSoftParse.getTopSemesterYear(content).getDescription();
     }
+
+    public static String getTopSemesterYearValue(SchoolConfigProperties schoolConfigProperties) {
+        //拼接url
+        String url = schoolConfigProperties.getSchoolHost() + schoolConfigProperties.getSchoolXnxq();
+        //http获取页面信息
+        String content = KingoSoftRequest.queryData(url, schoolConfigProperties);
+        //解析获取数据
+        return KingoSoftParse.getTopSemesterYear(content).getDescription();
+    }
+
 
     public static Map<String, Map<String, String>> getAllXqJxlValue(SchoolConfigProperties schoolConfigProperties) {
         Map<String, String> xxXqValue = getXxXqValue(schoolConfigProperties);

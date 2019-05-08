@@ -28,6 +28,11 @@ public class SchoolConfigProperties {
 
     private String yzmValue;
 
+    /**
+     * 格式 format: 2018-03-05
+     */
+    private String startTime;
+
     public String getYzmValue() {
 
         if (num / 5 == 1) {
@@ -40,6 +45,11 @@ public class SchoolConfigProperties {
     }
 
     public String getCookie() {
+        if (codeUtil == null) {
+            codeUtil=new CodeUtil();
+            codeUtil.getYzmValue(this);
+            cookie=codeUtil.getCookieStr();
+        }
         return codeUtil.getCookieStr();
     }
 
@@ -47,9 +57,6 @@ public class SchoolConfigProperties {
 
     private int num=0;
 
-    public void init(){
-        codeUtil=new CodeUtil();
-        codeUtil.getYzmValue(this);
-        cookie=codeUtil.getCookieStr();
-    }
+
+
 }

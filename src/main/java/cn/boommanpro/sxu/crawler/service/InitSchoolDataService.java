@@ -12,6 +12,7 @@ import cn.boommanpro.sxu.crawler.model.RoomData;
 import cn.boommanpro.sxu.crawler.model.XqJxl;
 import cn.boommanpro.sxu.crawler.model.XxXq;
 import cn.boommanpro.sxu.util.DateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,13 +23,13 @@ import java.util.Set;
 
 @Service
 public class InitSchoolDataService {
-//    @Autowired
+    @Autowired
     private XxXqMapper xxXqMapper;
-//    @Autowired
+    @Autowired
     private XqJxlMapper xqJxlMapper;
-//    @Autowired
+    @Autowired
     private JxlRoomMapper jxlRoomMapper;
-//    @Autowired
+    @Autowired
     private RoomDataMapper roomDataMapper;
 
 
@@ -46,11 +47,12 @@ public class InitSchoolDataService {
 
         //插入数据不应一条一条插入  应批量插入
 
-        DateUtil.setStartTime("2018-03-05");
-        DateUtil.setTerm("20171");
+        DateUtil.setStartTime(schoolConfigProperties.getStartTime());
+        DateUtil.setTerm(QuerySchoolDataUtil.getTopSemesterYearValue(schoolConfigProperties));
 
 
         //查询出所有校区
+
         List<JxlRoom> jxlRooms = jxlRoomMapper.selectByUpdatedAndDisabled(StatusType.ENABLE.getKey(), StatusType.DISABLE.getKey());
 
         while (jxlRooms.size()>0){
@@ -210,5 +212,9 @@ public class InitSchoolDataService {
 
         }
         return jxlRoomList;
+    }
+
+    public void initJxlRoomStatus() {
+        jxlRoomMapper.updateAllUpdatedAndDisabled();
     }
 }

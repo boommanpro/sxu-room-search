@@ -41,7 +41,7 @@ public class QuerySchoolDataUtilTest {
      */
     @Test
     public void getTopSemesterYear() {
-        String semesterYearMap = QuerySchoolDataUtil.getTopSemesterYear(schoolConfigProperties);
+        String semesterYearMap = QuerySchoolDataUtil.getTopSemesterYearDescription(schoolConfigProperties);
         log.info("最新数据为:{}! 如果其中没有您想要的学年学期信息，可能是教务系统还未更新，请耐心等待!", semesterYearMap);
     }
 

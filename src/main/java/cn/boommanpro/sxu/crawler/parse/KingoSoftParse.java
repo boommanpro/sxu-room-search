@@ -1,6 +1,7 @@
 package cn.boommanpro.sxu.crawler.parse;
 
 import cn.boommanpro.sxu.common.StringUtils;
+import cn.boommanpro.sxu.crawler.dto.SemesterYear;
 import cn.boommanpro.sxu.crawler.dto.XxXqPageFruit;
 import cn.boommanpro.sxu.crawler.model.ListWeekStruct;
 import cn.boommanpro.sxu.model.ClassRoomPage;
@@ -47,7 +48,7 @@ public class KingoSoftParse {
     /**
      * @return 获得学年学期和校区
      */
-    public static String getTopSemesterYear(String content) {
+    public static SemesterYear getTopSemesterYear(String content) {
 
         Document document = Jsoup.parse(content);
         Elements links = document.select("option");
@@ -55,10 +56,10 @@ public class KingoSoftParse {
         for (Element link : links) {
             data = link.text();
             if (data.contains("学年")) {
-                return link.text();
+                return new SemesterYear(link.val(),link.text());
             }
         }
-        return "暂时获取不到任何数据";
+        throw new RuntimeException("暂时获取不到任何数据");
     }
 
     public static Map<String, String> getListData(String content) {

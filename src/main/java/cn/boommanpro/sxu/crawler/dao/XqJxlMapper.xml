@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.boommanpro.sxu.crawler.dao.XqJxlMapper">
+  <resultMap id="BaseResultMap" type="cn.boommanpro.sxu.crawler.model.XqJxl">
+    <!--@mbg.generated generated on Wed May 08 09:48:22 CST 2019.-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="xxxq" jdbcType="VARCHAR" property="xxxq" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="disabled" jdbcType="INTEGER" property="disabled" />
+    <result column="deleted" jdbcType="INTEGER" property="deleted" />
+    <result column="updated" jdbcType="INTEGER" property="updated" />
+    <result column="update_times" jdbcType="INTEGER" property="updateTimes" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated generated on Wed May 08 09:48:22 CST 2019.-->
+    id, xxxq, `name`, `value`, create_date, disabled, deleted, updated, update_times, 
+    update_date
+  </sql>
+    <insert id="insertBatch">
+      insert into `xq_jxl`
+      (xxxq,name, value, create_date, update_date)
+      VALUES
+      <foreach collection="xqJxlList" item="xqJxl" separator=",">
+        (#{xqJxl.xxxq},#{xqJxl.name},#{xqJxl.value},#{xqJxl.createDate},#{xqJxl.updateDate})
+      </foreach>
+    </insert>
+  <select id="selectAllJxlValue" resultType="java.lang.String">
+SELECT value FROM `xq_jxl` WHERE deleted=0
+  </select>
+  <delete id="truncateTable">
+ TRUNCATE TABLE `xq_jxl`
+  </delete>
+</mapper>

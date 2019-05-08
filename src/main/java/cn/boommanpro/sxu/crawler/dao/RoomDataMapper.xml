@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.boommanpro.sxu.crawler.dao.RoomDataMapper">
+  <resultMap id="BaseResultMap" type="cn.boommanpro.sxu.crawler.model.RoomData">
+    <!--@mbg.generated generated on Wed May 08 09:48:26 CST 2019.-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="time" jdbcType="VARCHAR" property="time" />
+    <result column="classroom_value" jdbcType="VARCHAR" property="classroomValue" />
+    <result column="json_value" jdbcType="VARCHAR" property="jsonValue" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated generated on Wed May 08 09:48:26 CST 2019.-->
+    id, `time`, classroom_value, json_value
+  </sql>
+  <insert id="insertBatchByRoomDataList">
+    INSERT INTO `room_data`
+    (time, classroom_value,json_value)
+    VALUES
+    <foreach collection="roomDataList" separator=","  item="roomData">
+      (#{roomData.time},#{roomData.classroomValue},#{roomData.jsonValue})
+    </foreach>
+  </insert>
+  <select id="listRoomDataDtoByTimeAndJxlValue" resultType="cn.boommanpro.sxu.crawler.dto.RoomDataDto">
+SELECT
+	t1.`name`,
+	t2.json_value
+FROM
+	( SELECT `name`, `value` FROM `jxl_room` WHERE jxl_value = #{jxlValue} ) AS t1
+	LEFT JOIN ( SELECT classroom_value, json_value FROM `room_data` WHERE time = #{time} ) AS t2 ON t1.
+VALUE
+	= t2.classroom_value;
+  </select>
+</mapper>
