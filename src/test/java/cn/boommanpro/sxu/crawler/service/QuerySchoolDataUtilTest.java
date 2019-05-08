@@ -1,7 +1,7 @@
 package cn.boommanpro.sxu.crawler.service;
 
 import cn.boommanpro.sxu.config.SchoolConfigProperties;
-import cn.boommanpro.sxu.model.SchoolDetails;
+import cn.boommanpro.sxu.model.DefaultSchoolConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,14 +25,14 @@ public class QuerySchoolDataUtilTest {
     public void beforeSet() {
         schoolConfigProperties = new SchoolConfigProperties();
         schoolConfigProperties.setSchoolHost("http://jwglxt.aynu.edu.cn/");
-        schoolConfigProperties.setSchoolXnxq(SchoolDetails.XNXQ_XQ);
-        schoolConfigProperties.setSchoolMainHost(SchoolDetails.host2MainHost(schoolConfigProperties.getSchoolHost()));
-        schoolConfigProperties.setSchoolValidate(SchoolDetails.ValidateCode);
-        schoolConfigProperties.setSchoolJxl(SchoolDetails.List_JXL);
-        schoolConfigProperties.setSchoolRoom(SchoolDetails.List_Room);
-        schoolConfigProperties.setSchoolXnxq(SchoolDetails.XNXQ_XQ);
-        schoolConfigProperties.setSchoolRoomData(SchoolDetails.RoomData);
-        schoolConfigProperties.setSchoolRoomDataReferer(SchoolDetails.RoomDataReferer);
+        schoolConfigProperties.setSchoolXnxq(DefaultSchoolConfig.XNXQ_XQ);
+        schoolConfigProperties.setSchoolMainHost(DefaultSchoolConfig.host2MainHost(schoolConfigProperties.getSchoolHost()));
+        schoolConfigProperties.setSchoolValidate(DefaultSchoolConfig.ValidateCode);
+        schoolConfigProperties.setSchoolJxl(DefaultSchoolConfig.List_JXL);
+        schoolConfigProperties.setSchoolRoom(DefaultSchoolConfig.List_Room);
+        schoolConfigProperties.setSchoolXnxq(DefaultSchoolConfig.XNXQ_XQ);
+        schoolConfigProperties.setSchoolRoomData(DefaultSchoolConfig.RoomData);
+        schoolConfigProperties.setSchoolRoomDataReferer(DefaultSchoolConfig.RoomDataReferer);
     }
 
 

@@ -3,16 +3,21 @@ package cn.boommanpro.sxu.model;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SchoolDetails {
+public class DefaultSchoolConfig {
     public static final String ValidateCode = "sys/ValidateCode.aspx";
 
-    //教学楼列表获取
+    /**
+     * 教学楼列表获取
+     */
     public static final String List_JXL = "ZNPK/Private/List_JXL.aspx";
-
-    //教室列表获取
+    /**
+     * 教室列表获取
+     */
     public static final String List_Room = "ZNPK/Private/List_ROOM.aspx";
 
-    //获取学年学期 学校校区 信息
+    /**
+     * 获取学年学期 学校校区 信息
+     */
     public static final String XNXQ_XQ = "ZNPK/KBFB_RoomSel.aspx";
 
 
